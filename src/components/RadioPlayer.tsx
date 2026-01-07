@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import type { RadioStation } from '../types/radio';
 import { GENRES } from '../types/radio';
 import {
-    Sun, Moon, Share2, ChevronUp, ChevronDown,
+    Share2, ChevronUp, ChevronDown,
     Play, Pause, Square, Volume2, VolumeX, Volume1,
     DollarSign, Link
 } from 'lucide-react';
@@ -31,8 +31,6 @@ export function RadioPlayer({
     onTogglePlay,
     onVolumeChange,
     onStop,
-    isDarkMode,
-    onToggleTheme,
     selectedGenre,
     onGenreChange,
 }: RadioPlayerProps) {
