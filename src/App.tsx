@@ -9,6 +9,7 @@ import type { RadioStation } from './types/radio';
 import { GENRES } from './types/radio';
 import './App.css';
 import { Radio, Loader2 } from 'lucide-react';
+import { useCloudflare } from './hooks/useCloudflare';
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(true);
@@ -26,13 +27,15 @@ function App() {
     stop,
   } = useAudioPlayer();
 
+  useCloudflare();
+
   // Filter stations by selected genre
   const filteredStations = useMemo(() => {
     if (selectedGenre === 'all') return stations;
-    
+
     const genre = GENRES.find(g => g.id === selectedGenre);
     if (!genre || genre.tags.length === 0) return stations;
-    
+
     return stations.filter(station => {
       const stationTags = (station.tags || '').toLowerCase();
       return genre.tags.some(tag => stationTags.includes(tag.toLowerCase()));
@@ -111,7 +114,7 @@ function App() {
             <Radio size={16} />
           )}
           <span>
-            {selectedGenre !== 'all' 
+            {selectedGenre !== 'all'
               ? `${filteredStations.length} ${GENRES.find(g => g.id === selectedGenre)?.name || ''} stations`
               : `${stations.length} stations`
             }
