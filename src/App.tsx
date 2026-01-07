@@ -57,7 +57,7 @@ function App() {
   return (
     <div className={`app ${isDarkMode ? 'dark' : 'light'}`}>
       {/* Loading Overlay */}
-      {true && (
+      {loading && (
         <div className="loading-overlay">
           <div className="loading-content">
             {/* <div className="loading-spinner" /> */}
