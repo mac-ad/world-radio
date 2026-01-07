@@ -17,7 +17,7 @@ export function useAudioPlayer() {
 
     useEffect(() => {
         if (state.station && state.station.favicon) {
-            document.title = `${state.station.name} - ${state.station.city}, ${state.station.state}, ${state.station.countrycode}`;
+            document.title = `${state.station.name} - ${state.station.countrycode}`;
             const link = document.querySelector("link[rel~='icon']");
             const favicon = state.station.favicon !== "" ? state.station.favicon : '/radio.svg';
             if (link && link instanceof HTMLLinkElement) {
@@ -29,7 +29,7 @@ export function useAudioPlayer() {
                 document.head.appendChild(newLink);
             }
         } else {
-            document.title = 'LitVerse Radio';
+            document.title = 'World Radio | World Radio Map';
         }
     }, [state.station])
 

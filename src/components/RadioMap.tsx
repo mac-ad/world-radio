@@ -49,6 +49,7 @@ export function RadioMap({ stations, isDarkMode, onStationSelect, selectedStatio
             map.current?.remove();
             map.current = null;
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -60,9 +61,7 @@ export function RadioMap({ stations, isDarkMode, onStationSelect, selectedStatio
 
 
     useEffect(() => {
-        if (!map || !map.current || stations.length === 0) return;
-
-        const source = map.current.getSource("stations");
+        if (!map.current || stations.length === 0) return;
 
         const data: GeoJSON.FeatureCollection<GeoJSON.Point, RadioStation> = {
             type: "FeatureCollection",
@@ -77,39 +76,91 @@ export function RadioMap({ stations, isDarkMode, onStationSelect, selectedStatio
             })),
         };
 
-        const addStations = () => {
-            map.current?.addSource("stations", {
-                type: 'geojson',
-                data,
-            });
+        const updateOrAddStations = () => {
+            const source = map.current?.getSource("stations") as maplibregl.GeoJSONSource | undefined;
 
-            map.current?.addLayer({
-                id: 'stations',
-                type: 'circle',
-                source: 'stations',
-                paint: {
-                    'circle-color': '#fff',
-                    'circle-radius': 6,
-                    'circle-stroke-width': 1,
-                    'circle-stroke-color': '#000',
-                },
-            });
+            if (source) {
+                // Update existing source with new data
+                source.setData(data);
+            } else {
+                // Add source and layer for the first time
+                map.current?.addSource("stations", {
+                    type: 'geojson',
+                    data,
+                });
 
-            map.current?.on("click", "stations", (e) => {
-                const feature = e.features?.[0];
+                map.current?.addLayer({
+                    id: 'stations',
+                    type: 'circle',
+                    source: 'stations',
+                    paint: {
+                        'circle-color': isDarkMode ? '#fff' : '#1d1d1f',
+                        'circle-radius': 5,
+                        'circle-stroke-width': 1.5,
+                        'circle-stroke-color': isDarkMode ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.8)',
+                    },
+                });
 
-                console.log("feature", feature);
+                // Add hover effect
+                map.current?.on('mouseenter', 'stations', () => {
+                    if (map.current) map.current.getCanvas().style.cursor = 'pointer';
+                });
 
-                if (!feature) return;
+                map.current?.on('mouseleave', 'stations', () => {
+                    if (map.current) map.current.getCanvas().style.cursor = '';
+                });
 
-                onStationSelect(feature.properties as RadioStation);
-            })
+                map.current?.on("click", "stations", (e) => {
+                    const feature = e.features?.[0];
+                    if (!feature) return;
+                    onStationSelect(feature.properties as RadioStation);
+                });
+            }
+        };
+
+        // Wait for map style to be loaded
+        if (map.current.isStyleLoaded()) {
+            updateOrAddStations();
+        } else {
+            map.current.once('style.load', updateOrAddStations);
         }
+    }, [stations, isDarkMode, onStationSelect]);
 
-        if (!source) {
-            addStations();
-        }
-    }, [stations]);
+    // Update station styles when selection changes
+    useEffect(() => {
+        if (!map.current || !map.current.getLayer('stations')) return;
+
+        const selectedId = selectedStation?.stationuuid || '';
+        const accentColor = '#ff6b35';
+
+        map.current.setPaintProperty('stations', 'circle-color', [
+            'case',
+            ['==', ['get', 'stationuuid'], selectedId],
+            accentColor,
+            isDarkMode ? '#fff' : '#1d1d1f'
+        ]);
+
+        map.current.setPaintProperty('stations', 'circle-radius', [
+            'case',
+            ['==', ['get', 'stationuuid'], selectedId],
+            10,
+            5
+        ]);
+
+        map.current.setPaintProperty('stations', 'circle-stroke-width', [
+            'case',
+            ['==', ['get', 'stationuuid'], selectedId],
+            3,
+            1.5
+        ]);
+
+        map.current.setPaintProperty('stations', 'circle-stroke-color', [
+            'case',
+            ['==', ['get', 'stationuuid'], selectedId],
+            isDarkMode ? '#fff' : '#1d1d1f',
+            isDarkMode ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.8)'
+        ]);
+    }, [selectedStation, isDarkMode]);
 
     // Show popup for selected station
     useEffect(() => {

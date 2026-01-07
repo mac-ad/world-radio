@@ -1,28 +1,43 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { RadioMap } from './components/RadioMap';
 import { RadioPlayer } from './components/RadioPlayer';
 import { SearchBar } from './components/SearchBar';
+import { SocialFloat } from './components/SocialFloat';
 import { useRadioStations } from './hooks/useRadioStations';
 import { useAudioPlayer } from './hooks/useAudioPlayer';
 import type { RadioStation } from './types/radio';
+import { GENRES } from './types/radio';
 import './App.css';
-import { Radio } from 'lucide-react';
+import { Radio, Loader2 } from 'lucide-react';
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const { stations, loading, error: fetchError } = useRadioStations();
+  const [selectedGenre, setSelectedGenre] = useState('all');
+  const { stations, loading, loadingMore, error: fetchError } = useRadioStations();
   const {
     station: currentStation,
     isPlaying,
     isLoading: audioLoading,
     volume,
     error: audioError,
-    analyserNode,
     playStation,
     togglePlay,
     setVolume,
     stop,
   } = useAudioPlayer();
+
+  // Filter stations by selected genre
+  const filteredStations = useMemo(() => {
+    if (selectedGenre === 'all') return stations;
+    
+    const genre = GENRES.find(g => g.id === selectedGenre);
+    if (!genre || genre.tags.length === 0) return stations;
+    
+    return stations.filter(station => {
+      const stationTags = (station.tags || '').toLowerCase();
+      return genre.tags.some(tag => stationTags.includes(tag.toLowerCase()));
+    });
+  }, [stations, selectedGenre]);
 
   const handleStationSelect = useCallback((station: RadioStation) => {
     playStation(station);
@@ -30,6 +45,10 @@ function App() {
 
   const toggleTheme = useCallback(() => {
     setIsDarkMode(prev => !prev);
+  }, []);
+
+  const handleGenreChange = useCallback((genre: string) => {
+    setSelectedGenre(genre);
   }, []);
 
   return (
@@ -59,9 +78,9 @@ function App() {
         />
       )}
 
-      {/* Map */}
+      {/* Map - uses filtered stations */}
       <RadioMap
-        stations={stations}
+        stations={filteredStations}
         isDarkMode={isDarkMode}
         onStationSelect={handleStationSelect}
         selectedStation={currentStation}
@@ -74,21 +93,35 @@ function App() {
         isLoading={audioLoading}
         volume={volume}
         error={audioError}
-        analyserNode={analyserNode}
         onTogglePlay={togglePlay}
         onVolumeChange={setVolume}
         onStop={stop}
         isDarkMode={isDarkMode}
         onToggleTheme={toggleTheme}
+        selectedGenre={selectedGenre}
+        onGenreChange={handleGenreChange}
       />
 
       {/* Station Count Badge */}
-      {!loading && stations.length > 0 && (
-        <div className="station-count">
-          <Radio />
-          <span>{stations.length} stations</span>
+      {!loading && filteredStations.length > 0 && (
+        <div className={`station-count ${loadingMore ? 'loading-more' : ''}`}>
+          {loadingMore ? (
+            <Loader2 size={16} className="spin-icon" />
+          ) : (
+            <Radio size={16} />
+          )}
+          <span>
+            {selectedGenre !== 'all' 
+              ? `${filteredStations.length} ${GENRES.find(g => g.id === selectedGenre)?.name || ''} stations`
+              : `${stations.length} stations`
+            }
+            {loadingMore && '...'}
+          </span>
         </div>
       )}
+
+      {/* Social Links & Support */}
+      <SocialFloat isDarkMode={isDarkMode} />
     </div>
   );
 }
