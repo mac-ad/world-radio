@@ -8,35 +8,35 @@ const SOCIAL_LINKS = [
   {
     name: 'GitHub',
     icon: Github,
-    url: 'https://github.com/mac-ad',
+    url: import.meta.env.VITE_GITHUB_URL,
     color: '#333',
     darkColor: '#fff',
   },
   {
     name: 'Twitter',
     icon: Twitter,
-    url: 'https://twitter.com/_macad',
+    url: import.meta.env.VITE_TWITTER_URL,
     color: '#1DA1F2',
     darkColor: '#1DA1F2',
   },
   {
     name: 'LinkedIn',
     icon: Linkedin,
-    url: 'https://linkedin.com/in/macad',
+    url: import.meta.env.VITE_LINKEDIN_URL,
     color: '#0A66C2',
     darkColor: '#0A66C2',
   },
   {
     name: 'Email',
     icon: Mail,
-    url: 'mailto:macad626@gmail.com',
+    url: 'mailto:' + import.meta.env.VITE_EMAIL_URL,
     color: '#EA4335',
     darkColor: '#EA4335',
   },
   {
     name: "website",
     icon: Globe,
-    url: "https://macad.dev",
+    url: import.meta.env.VITE_WEBSITE_URL,
     color: "#007AFF",
     darkColor: "#007AFF",
   }
@@ -72,7 +72,7 @@ export function SocialFloat({ isDarkMode }: SocialFloatProps) {
         </div>
 
         <a
-          href="https://ko-fi.com/macad626"
+          href={import.meta.env.VITE_KOFI_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="support-btn-large"
@@ -81,7 +81,6 @@ export function SocialFloat({ isDarkMode }: SocialFloatProps) {
           <span>Buy me a Kofi!</span>
         </a>
       </div>
-
     </div>
   );
 }

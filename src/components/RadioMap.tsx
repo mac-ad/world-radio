@@ -95,8 +95,8 @@ export function RadioMap({ stations, isDarkMode, onStationSelect, selectedStatio
                     source: 'stations',
                     paint: {
                         'circle-color': isDarkMode ? '#fff' : '#1d1d1f',
-                        'circle-radius': 5,
-                        'circle-stroke-width': 1.5,
+                        'circle-radius': 4,
+                        'circle-stroke-width': 1,
                         'circle-stroke-color': isDarkMode ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.8)',
                     },
                 });
@@ -143,15 +143,15 @@ export function RadioMap({ stations, isDarkMode, onStationSelect, selectedStatio
         map.current.setPaintProperty('stations', 'circle-radius', [
             'case',
             ['==', ['get', 'stationuuid'], selectedId],
-            10,
+            6,
             5
         ]);
 
         map.current.setPaintProperty('stations', 'circle-stroke-width', [
             'case',
             ['==', ['get', 'stationuuid'], selectedId],
-            3,
-            1.5
+            2,
+            1
         ]);
 
         map.current.setPaintProperty('stations', 'circle-stroke-color', [
