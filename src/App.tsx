@@ -57,11 +57,12 @@ function App() {
   return (
     <div className={`app ${isDarkMode ? 'dark' : 'light'}`}>
       {/* Loading Overlay */}
-      {loading && (
+      {true && (
         <div className="loading-overlay">
           <div className="loading-content">
-            <div className="loading-spinner" />
-            <p>Tuning into the world...</p>
+            {/* <div className="loading-spinner" /> */}
+            <img src="/loader.gif" alt="World Radio" className="loading-image" />
+            {/* <p>Tuning into the world...</p> */}
           </div>
         </div>
       )}

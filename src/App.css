@@ -881,18 +881,21 @@ body {
 
 .loading-content {
   text-align: center;
-  animation: loading-bounce 0.6s var(--ease-out-expo);
+  animation: loading-spin 10s linear infinite reverse;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
-@keyframes loading-bounce {
+@keyframes loading-spin {
   from {
-    opacity: 0;
-    transform: scale(0.9) translateY(20px);
+    transform: rotate(0deg);
   }
 
   to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
+    transform: rotate(360deg);
   }
 }
 
