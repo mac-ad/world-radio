@@ -1,4 +1,5 @@
-import { Coffee, Github, Twitter, Linkedin, Mail, Globe } from 'lucide-react';
+import { useState } from 'react';
+import { Coffee, Github, Twitter, Linkedin, Mail, Globe, Info, X } from 'lucide-react';
 
 interface SocialFloatProps {
   isDarkMode: boolean;
@@ -43,45 +44,107 @@ const SOCIAL_LINKS = [
 ];
 
 export function SocialFloat({ isDarkMode }: SocialFloatProps) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   return (
-    <div className="social-float">
-      {/* Expanded Panel */}
-      <div className="social-panel">
-        <div className="social-panel-header">
-          <span>Let's Connect!</span>
-        </div>
+    <>
+      {/* Mobile Info Button - Top Left */}
+      <button
+        className="social-mobile-toggle"
+        onClick={() => setMobileOpen(true)}
+        aria-label="Show info and social links"
+      >
+        <Info size={20} />
+      </button>
 
-        <p className="social-panel-desc">
-          Built for radio enthusiasts worldwide. Help keep this project alive!
-        </p>
+      {/* Mobile Overlay */}
+      {mobileOpen && (
+        <div className="social-mobile-overlay" onClick={() => setMobileOpen(false)}>
+          <div className="social-mobile-panel" onClick={(e) => e.stopPropagation()}>
+            <button
+              className="social-mobile-close"
+              onClick={() => setMobileOpen(false)}
+              aria-label="Close"
+            >
+              <X size={20} />
+            </button>
 
-        <div className="social-links">
-          {SOCIAL_LINKS.map((link) => (
+            <div className="social-panel-header">
+              <span>Let's Connect!</span>
+            </div>
+
+            <p className="social-panel-desc">
+              Built for radio enthusiasts worldwide. Help keep this project alive!
+            </p>
+
+            <div className="social-links">
+              {SOCIAL_LINKS.map((link) => (
+                <a
+                  key={link.name}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-link"
+                  title={link.name}
+                  style={{ '--link-color': isDarkMode ? link.darkColor : link.color } as React.CSSProperties}
+                >
+                  <link.icon size={22} />
+                </a>
+              ))}
+            </div>
+
             <a
-              key={link.name}
-              href={link.url}
+              href={import.meta.env.VITE_KOFI_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="social-link"
-              title={link.name}
-              style={{ '--link-color': isDarkMode ? link.darkColor : link.color } as React.CSSProperties}
+              className="support-btn-large"
             >
-              <link.icon size={20} />
+              <Coffee size={18} />
+              <span>Buy me a Kofi!</span>
             </a>
-          ))}
+          </div>
         </div>
+      )}
 
-        <a
-          href={import.meta.env.VITE_KOFI_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="support-btn-large"
-        >
-          <Coffee size={18} />
-          <span>Buy me a Kofi!</span>
-        </a>
+      {/* Desktop Version - Bottom Left */}
+      <div className="social-float">
+        <div className="social-panel">
+          <div className="social-panel-header">
+            <span>Let's Connect!</span>
+          </div>
+
+          <p className="social-panel-desc">
+            Built for radio enthusiasts worldwide. Help keep this project alive!
+          </p>
+
+          <div className="social-links">
+            {SOCIAL_LINKS.map((link) => (
+              <a
+                key={link.name}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-link"
+                title={link.name}
+                style={{ '--link-color': isDarkMode ? link.darkColor : link.color } as React.CSSProperties}
+              >
+                <link.icon size={20} />
+              </a>
+            ))}
+          </div>
+
+          <a
+            href={import.meta.env.VITE_KOFI_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="support-btn-large"
+          >
+            <Coffee size={18} />
+            <span>Buy me a Kofi!</span>
+          </a>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

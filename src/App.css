@@ -986,8 +986,8 @@ body {
 /* ===== Station Count Badge ===== */
 .station-count {
   position: fixed;
-  top: 24px;
-  left: 24px;
+  top: 30px;
+  left: 80px;
   z-index: 1000;
   background: var(--surface);
   backdrop-filter: blur(24px) saturate(180%);
@@ -1481,7 +1481,7 @@ body {
 .social-float {
   position: fixed;
   bottom: 24px;
-  left: 24px;
+  right: 24px;
   z-index: 1000;
   display: none;
   flex-direction: column;
@@ -1693,10 +1693,171 @@ body {
   }
 }
 
+/* ===== Mobile Social Button & Panel ===== */
+.social-mobile-toggle {
+  position: fixed;
+  top: 30px;
+  left: 16px;
+  z-index: 1001;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  box-shadow: var(--shadow-lg);
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-spring);
+}
+
+.app.dark .social-mobile-toggle {
+  box-shadow: var(--shadow-dark-lg);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.social-mobile-toggle:hover {
+  transform: scale(1.08);
+  box-shadow: var(--shadow-xl);
+  background: var(--accent-primary);
+  color: white;
+  border-color: var(--accent-primary);
+}
+
+.social-mobile-toggle:active {
+  transform: scale(0.95);
+}
+
+/* Position info button on small screens - below search bar */
+@media (max-width: 640px) {
+  .social-mobile-toggle {
+    top: 80px;
+    left: 16px;
+  }
+}
+
 @media (min-width : 1300px) {
 
   .social-float {
     display: flex;
   }
 
+  .social-mobile-toggle {
+    display: none;
+  }
+}
+
+/* Mobile Overlay */
+.social-mobile-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: overlay-fade-in 0.3s var(--ease-out-expo);
+}
+
+.app.light .social-mobile-overlay {
+  background: rgba(245, 245, 247, 0.85);
+}
+
+@keyframes overlay-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* Mobile Panel */
+.social-mobile-panel {
+  background: var(--surface-elevated);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--border);
+  padding: 28px 24px;
+  width: 100%;
+  max-width: 340px;
+  position: relative;
+  animation: panel-slide-up 0.4s var(--ease-spring);
+}
+
+.app.dark .social-mobile-panel {
+  box-shadow: var(--shadow-dark-xl);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+@keyframes panel-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.social-mobile-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  border: none;
+  background: var(--border);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.social-mobile-close:hover {
+  background: var(--accent-danger);
+  color: white;
+  transform: rotate(90deg);
+}
+
+.social-mobile-panel .social-panel-header {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.social-mobile-panel .social-panel-desc {
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.social-mobile-panel .social-links {
+  justify-content: center;
+  margin-bottom: 20px;
+  gap: 12px;
+}
+
+.social-mobile-panel .social-link {
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+}
+
+.social-mobile-panel .support-btn-large {
+  padding: 16px 24px;
+  font-size: 15px;
 }

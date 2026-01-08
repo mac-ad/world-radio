@@ -35,15 +35,15 @@ export function RadioMap({ stations, isDarkMode, onStationSelect, selectedStatio
             attributionControl: false,
         });
 
-        map.current.addControl(
-            new maplibregl.NavigationControl({ showCompass: false }),
-            'top-right'
-        );
+        // map.current.addControl(
+        //     new maplibregl.NavigationControl({ showCompass: false }),
+        //     'top-right'
+        // );
 
-        map.current.addControl(
-            new maplibregl.AttributionControl({ compact: true }),
-            'bottom-right'
-        );
+        // map.current.addControl(
+        //     new maplibregl.AttributionControl({ compact: true }),
+        //     'bottom-right'
+        // );
 
         return () => {
             map.current?.remove();
