@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { RadioMap } from './components/RadioMap';
 import { RadioPlayer } from './components/RadioPlayer';
 import { SearchBar } from './components/SearchBar';
@@ -28,6 +28,61 @@ function App() {
   } = useAudioPlayer();
 
   useCloudflare();
+
+  // Track if we've successfully loaded the station from URL
+  const hasFoundStationFromUrl = useRef(false);
+  const initialStationUuid = useRef<string | null>(null);
+
+  // Capture the initial station UUID from URL on first render
+  useEffect(() => {
+    if (initialStationUuid.current === null) {
+      const urlParams = new URLSearchParams(window.location.search);
+      initialStationUuid.current = urlParams.get('station_uuid') || '';
+    }
+  }, []);
+
+  // Load station from URL parameter - keep trying as more batches load
+  useEffect(() => {
+    // Skip if no UUID in URL, or if we already found and played the station
+    if (!initialStationUuid.current || hasFoundStationFromUrl.current) return;
+
+    // Wait for at least some stations to be available
+    if (stations.length === 0) return;
+
+    const stationUuid = initialStationUuid.current;
+    const station = stations.find(s => s.stationuuid === stationUuid);
+
+    if (station) {
+      // Found the station! Play it and stop searching
+      playStation(station);
+      hasFoundStationFromUrl.current = true;
+    }
+    // If not found, we'll keep trying as more stations load (loadingMore changes)
+  }, [stations, playStation]);
+
+  // Mark as done searching when all loading completes (even if station not found)
+  useEffect(() => {
+    if (!loading && !loadingMore && initialStationUuid.current) {
+      hasFoundStationFromUrl.current = true;
+    }
+  }, [loading, loadingMore]);
+
+  // Update URL when station changes (but only after initial URL processing is done)
+  useEffect(() => {
+    // Don't update URL until we've finished processing initial URL
+    if (!hasFoundStationFromUrl.current && initialStationUuid.current) return;
+
+    const url = new URL(window.location.href);
+
+    if (currentStation) {
+      url.searchParams.set('station_uuid', currentStation.stationuuid);
+    } else {
+      url.searchParams.delete('station_uuid');
+    }
+
+    // Update URL without triggering a page reload
+    window.history.replaceState({}, '', url.toString());
+  }, [currentStation]);
 
   // Filter stations by selected genre
   const filteredStations = useMemo(() => {
@@ -60,9 +115,8 @@ function App() {
       {loading && (
         <div className="loading-overlay">
           <div className="loading-content">
-            {/* <div className="loading-spinner" /> */}
-            <img src="/loader.gif" alt="World Radio" className="loading-image" />
-            {/* <p>Tuning into the world...</p> */}
+            <div className="loading-spinner" />
+            <p>Tuning into the world...</p>
           </div>
         </div>
       )}

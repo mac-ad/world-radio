@@ -17,7 +17,7 @@
   --border-light: rgba(0, 0, 0, 0.06);
 
   /* Dark mode - Apple style */
-  --bg-dark: #000000;
+  --bg-dark: #0000007a;
   --surface-dark: rgba(28, 28, 30, 0.8);
   --surface-elevated-dark: rgba(44, 44, 46, 0.85);
   --text-dark: #f5f5f7;
@@ -241,26 +241,13 @@ body {
   text-transform: lowercase;
 }
 
-/* ===== Radio Player Panel - Glassmorphism ===== */
-/* Player enter animation */
-@keyframes player-enter {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(30px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-}
 
 .player-content {
   background: var(--surface);
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
   border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-xl);
+  /* box-shadow: var(--shadow-xl); */
   border: 1px solid var(--border);
   display: flex;
   flex-direction: column;
@@ -270,7 +257,7 @@ body {
 }
 
 .player-content:hover {
-  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.18), 0 10px 30px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 28px 90px rgba(0, 0, 0, 0.18), 0 10px 30px rgba(0, 0, 0, 0.1); */
   transform: translateY(-2px);
 }
 
@@ -571,23 +558,43 @@ body {
   max-width: 520px;
   padding: 0 20px;
   box-sizing: border-box;
-  animation: player-enter 0.6s var(--ease-spring);
+  overflow: hidden;
+  /* animation: player-enter 0.6s var(--ease-spring); */
 }
+
+.radio-player-wrapper.expanded {
+  overflow: visible;
+}
+
+/* ===== Radio Player Panel - Glassmorphism ===== */
+/* Player enter animation */
+/* @keyframes player-enter {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+} */
 
 /* ===== Genre Island (Floating above player) ===== */
 .genre-island {
+  position: absolute;
+  display: none;
   width: 100%;
-  max-width: 600px;
-  opacity: 0;
-  transform: translateY(20px) scale(0.95);
+  max-width: 470px;
+  /* transform: translateY(20px) scale(0.95); */
   pointer-events: none;
   transition: all 0.4s var(--ease-spring);
 }
 
 .genre-island.visible {
-  opacity: 1;
-  transform: translateY(0) scale(1);
+  top: -180px;
   pointer-events: auto;
+  display: block;
 }
 
 .genre-island-content {
@@ -596,7 +603,7 @@ body {
   -webkit-backdrop-filter: blur(40px) saturate(180%);
   border-radius: var(--radius-xl);
   padding: 16px 20px;
-  box-shadow: var(--shadow-xl);
+  /* box-shadow: var(--shadow-xl); */
   border: 1px solid var(--border);
 }
 
@@ -863,6 +870,7 @@ body {
   inset: 0;
   background: var(--bg);
   display: flex;
+  -webkit-backdrop-filter: blur(10px);
   align-items: center;
   justify-content: center;
   z-index: 2000;
@@ -889,6 +897,7 @@ body {
   gap: 10px;
 }
 
+/* 
 @keyframes loading-spin {
   from {
     transform: rotate(0deg);
@@ -897,7 +906,7 @@ body {
   to {
     transform: rotate(360deg);
   }
-}
+} */
 
 .loading-spinner {
   width: 52px;

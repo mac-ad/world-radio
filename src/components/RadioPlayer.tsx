@@ -4,8 +4,9 @@ import { GENRES } from '../types/radio';
 import {
     Share2, ChevronUp, ChevronDown,
     Play, Pause, Square, Volume2, VolumeX, Volume1,
-    DollarSign, Link
+    DollarSign
 } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 interface RadioPlayerProps {
     station: RadioStation | null;
@@ -59,14 +60,19 @@ export function RadioPlayer({
         });
     };
 
-    // Copy station link
+    // Copy shareable link with station UUID
     const handleShare = useCallback(async () => {
         if (!station) return;
 
-        const url = station.homepage || station.url_resolved || station.url;
+        // Build URL with station_uuid parameter
+        const shareUrl = new URL(window.location.origin + window.location.pathname);
+        shareUrl.searchParams.set('station_uuid', station.stationuuid);
+        const url = shareUrl.toString();
+
         try {
             await navigator.clipboard.writeText(url);
             setCopied(true);
+            toast.success('Link copied to clipboard')
             setTimeout(() => setCopied(false), 2000);
         } catch {
             // Fallback for older browsers
@@ -77,6 +83,7 @@ export function RadioPlayer({
             document.execCommand('copy');
             document.body.removeChild(textArea);
             setCopied(true);
+            toast.error('Failed to copy link to clipboard')
             setTimeout(() => setCopied(false), 2000);
         }
     }, [station]);
@@ -125,14 +132,14 @@ export function RadioPlayer({
                                 </button>
                             )}
 
-                            <button
+                            {/* <button
                                 className="header-btn tooltip-btn"
                                 onClick={handleSupport}
                                 aria-label="Visit website"
                                 data-tooltip="Website"
                             >
                                 <Link size={16} />
-                            </button>
+                            </button> */}
 
                             <button
                                 className="header-btn support-btn tooltip-btn"
