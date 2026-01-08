@@ -574,9 +574,10 @@ body {
   gap: 23px;
   width: 100%;
   max-width: 520px;
-  padding: 0 20px;
+  padding: 0 10px;
   box-sizing: border-box;
-  overflow: hidden;
+  /* border: 1px solid red; */
+  /* overflow: hidden; */
   /* animation: player-enter 0.6s var(--ease-spring); */
 }
 
@@ -602,7 +603,7 @@ body {
 .genre-island {
   position: absolute;
   display: none;
-  width: 100%;
+  width: 95%;
   max-width: 470px;
   /* transform: translateY(20px) scale(0.95); */
   pointer-events: none;
@@ -610,7 +611,7 @@ body {
 }
 
 .genre-island.visible {
-  top: -180px;
+  bottom: 105%;
   pointer-events: auto;
   display: block;
 }
@@ -1345,7 +1346,7 @@ body {
 /* ===== Responsive ===== */
 @media (max-width: 640px) {
   .radio-player {
-    bottom: 16px;
+    /* bottom: 16px; */
     min-width: unset;
     width: calc(100% - 32px);
   }
@@ -1677,7 +1678,9 @@ body {
 }
 
 @media (min-width : 700px) {
-
+  .genre-island.visible {
+    top: -190px;
+  }
 
   .radio-player-wrapper {
     gap: 10px;
