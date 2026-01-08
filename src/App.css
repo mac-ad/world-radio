@@ -664,10 +664,10 @@ body {
 }
 
 .genre-chip.active {
-  background: var(--accent-primary);
+  background: var(--accent-primary) !important;
   border-color: var(--accent-primary);
   color: white;
-  box-shadow: 0 2px 12px rgba(0, 122, 255, 0.35);
+  /* box-shadow: 0 2px 12px rgba(0, 122, 255, 0.35); */
 }
 
 /* ===== Main Player ===== */
@@ -1421,21 +1421,21 @@ body {
 }
 
 .app.dark .control-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.1);
+  /* background: rgba(255, 255, 255, 0.1); */
 }
 
 .app.dark .play-btn:hover:not(:disabled) {
-  background: rgba(0, 122, 255, 0.2);
+  /* background: rgba(0, 122, 255, 0.2); */
   color: var(--accent-primary);
 }
 
 .app.dark .stop-btn:hover:not(:disabled) {
-  background: rgba(255, 59, 48, 0.2);
+  /* background: rgba(255, 59, 48, 0.2); */
   color: var(--accent-danger);
 }
 
 .app.dark .volume-btn:hover:not(:disabled) {
-  background: rgba(88, 86, 214, 0.2);
+  /* background: rgba(88, 86, 214, 0.2); */
   color: var(--accent-secondary);
 }
 
